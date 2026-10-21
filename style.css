@@ -3,10 +3,7 @@
 /* ========> To run the water:  */
 /* npx tailwindcss -i style.css -o output.css --watch */
 
-*{
-    /* margin: 0; */
-    /* padding: 0; */
-}
+
 body{
     box-sizing: content-box;
     overflow-x: hidden;
