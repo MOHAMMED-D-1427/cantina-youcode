@@ -3,15 +3,20 @@ _ Verify the form in real time using regular expressions:
     +Nom du plat : obligatoire, entre 3 et 30 caractères.
     +Catégorie : obligatoire.
     +Prix : nombre positif obligatoire.
-_ Considering that we work for 4 days.
+    ❗The form must be filled 3 times for the 3 Categories(Entrée, Plat principal, Dessert).
+    
+_ Considering that we work for 5 days(Mon-Fri).
 _ Daily budget is 50 DH.
 _ Show a window/form of the cook's Garde-Manger(The available ingredients).
-_ A dropdown menu, lets the manager to choose a mail for a day.(There are   constraines...).
+_ A dropdown menu, lets the manager to choose a mail for a day.(There are constraines...).
 _ Everyday has a resume card, containes the 3 mail components(Entrée, Plat principal, Dessert) & the total price of the mail.
 _ If a recipe(recette) card was reserved, it takes [Assigné : Mardi - Plat] and its trancparency decreases.
 _ If you chose "En réserve" option(It's like Cancel Reserving), the repice card will get back to his normal status.
 _ Confirmation message before deleting any recipe dard or menu.
 _ Show confirmation/error popup(Toast) for adding, deleting, updating and exceed 50 DH.
+
+
+
 
 📊 Statistics: ===========================================
 _ The number of mails/plates that reserved(3days/5).

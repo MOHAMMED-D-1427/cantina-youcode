@@ -1,0 +1,12 @@
+node_modules/
+
+
+# Tailwind generated output
+output.css
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
