@@ -77,9 +77,9 @@ document.addEventListener("change", (e)=>{
 });
 
 function addRecipe(){
-    let div = document.createElement("div")
+    let div = document.createElement("div");
     let recette = `
-        <div class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
+        <div id="recipe" class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
             <div class="flex justify-between">
                 <span class="">${recipeInfo.name}</span>
                 <span >${recipeInfo.price} DH</span>
@@ -98,9 +98,9 @@ function addRecipe(){
                 <option value="">Vendredi</option>
             </select>
             <div class="pt-2">
-                <button data-id='${recipeId}' class="border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
+                <button id="modify" data-id='${recipeId}' class="border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
                     Modifier</button>
-                <button data-id='${recipeId}' class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
+                <button  id="delete" data-id='${recipeId}' class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
                     Supprimer</button>
             </div>
         </div>
@@ -120,8 +120,38 @@ createBtn.onclick = (e)=>{
     console.log(recipeInfo);
     addRecipe();
     addingForm.style.display = "none"
-
 }
+
+// ================================================== Detele a recipe
+
+document.addEventListener("click", function(e){
+    if(e.target.matches("#delete")){
+        e.target.closest("#recipe").remove()
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
