@@ -20,7 +20,7 @@ _ Show confirmation/error popup(Toast) for adding, deleting, updating and exceed
 
 📊 Statistics: ===========================================
 _ The number of mails/plates that reserved(3days/5).
-_ The total price for each day mail.
+_ The total price for each day mail.(The average)
 _ The total price of the week.
 _ Nutritional Balance Index(At least one mail a week).
 

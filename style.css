@@ -9,18 +9,16 @@ body{
     overflow-x: hidden;
     padding-top: 60px;
     background: black;
+    height: 170vh;
+}
+/* ==================================== Custom style */
+@theme {
+  --shadow-custom: 0 0 5px gray;
 }
 
 
 /* ==================================== */
-.background{
-    /* filter: brightness(0.7); */
-    width: 100vw;
-    height: 200vh;
-    position: absolute;
-    top: 0;
-    z-index: -1;
-}
+
 
 header{
     background: #0000007a;
@@ -50,9 +48,6 @@ header span{
     /* border: 2px solid #656363; */
 }
 
-/* .filled-card{
-    width: 170px;
-    padding: 18px;
-    text-align: center;
-    border: 2px solid #656363;
-} */
+.popupForm{
+    display: none;
+}
