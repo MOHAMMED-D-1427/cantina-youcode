@@ -167,7 +167,7 @@
      <p class="text-white text-2xl font-bold w-[90%] mx-auto m-2">
         Les recette disponibles</p>
 
-    <section class="flex justify-center flex-wrap gap-1.5 w-[90%] mx-auto text-gray-400">
+    <section id="garde-manger" class="flex justify-center flex-wrap gap-1.5 w-[90%] mx-auto text-gray-400">
         <div class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
             <div class="flex justify-between">
                 <span class="">Velouté de légumes</span>
@@ -242,17 +242,17 @@
                 <div>
                     <label for="cat">Catégorie</label><br>
                     <select required name="cat" id="cat" class="border-2 border-gray-500 rounded p-0.5 bg-black">
-                        <option value="">Entrée</option>
-                        <option value="">Plat principal</option>
-                        <option value="">Dessert</option>
+                        <option value="Entrée">Entrée</option>
+                        <option value="Plat principal">Plat principal</option>
+                        <option value="Dessert">Dessert</option>
                     </select><br>
                 </div>
                 <div>
-                    <label for="bd">Badge</label><br>
-                    <select required name="bd" id="bd" class="border-2 border-gray-500 rounded p-0.5 bg-black">
-                        <option value="">Bio</option>
-                        <option value="">Végétarien</option>
-                        <option value="">Classique</option>
+                    <label for="badge">Badge</label><br>
+                    <select required name="badge" id="badge" class="border-2 border-gray-500 rounded p-0.5 bg-black">
+                        <option value="Bio">Bio</option>
+                        <option value="Végétarien">Végétarien</option>
+                        <option value="Classique">Classique</option>
                     </select><br>
                 </div>
                 <div>
