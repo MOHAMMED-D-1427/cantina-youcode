@@ -510,7 +510,10 @@ header span {
 .empty-card {
   padding: 18px;
 }
-.popupForm {
+.popup-form {
+  display: none;
+}
+.popup-modify-form {
   display: none;
 }
 @property --tw-rotate-x {

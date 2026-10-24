@@ -48,6 +48,11 @@ header span{
     /* border: 2px solid #656363; */
 }
 
-.popupForm{
+.popup-form{
+    display: none;
+
+}
+
+.popup-modify-form{
     display: none;
 }

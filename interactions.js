@@ -1,6 +1,7 @@
 
 
-let addingForm = document.querySelector(".popupForm")
+let addingForm = document.querySelector(".popup-form")
+let modifingForm = document.querySelector(".popup-modify-form")
 // let close = document.querySelector(".closeMark")
 
 // console.log(addRecetteBtn)
@@ -10,7 +11,7 @@ document.addEventListener("click", function(e){
         // console.log("Clicked")
         addingForm.style.display = "flex"
     }
-    if(e.target.matches(".popupForm") || e.target.matches(".closeMark span")){
+    if(e.target.matches(".popup-form") || e.target.matches(".closeMark span")){
         addingForm.style.display = "none"
     }
     if(e.target.matches(".annule")){
@@ -37,7 +38,7 @@ let isValid = false;
 
 document.addEventListener("input", (e)=>{
     const value = e.target.value; 
-    if(e.target.matches("input[id='nom']")){
+    if(e.target.matches("input[id='name']")){
         if(!regex_name.test(value)){
             nameField.textContent = "Le nom doit comporter entre 3-30 caras.";
             isValid = false;
@@ -45,7 +46,7 @@ document.addEventListener("input", (e)=>{
             nameField.textContent = ''
             isValid = true;
         }
-    }else if(e.target.matches("input[id='prix']")){
+    }else if(e.target.matches("input[id='price']")){
         if(!regex_price.test(Number(value))){
             priceField.textContent = "Le prix doit être de 1 à 40 dh";
             isValid = false;
@@ -55,17 +56,27 @@ document.addEventListener("input", (e)=>{
         }
     }
 })
+// ================================================== Show recipes
 
 // ================================================== Add a recipe
 
-let recipeId = 1;
+let localStorageData = JSON.parse(localStorage.getItem("recipes"));
+console.log(localStorageData)
 
+let recipeId = Number(localStorage.getItem("rId")) || 1;
+
+let recipes = [];
+if(localStorageData){
+    recipes = [...localStorageData];
+
+}
+// console.log(recipes)
 let recipeInfo = {badge, cat};
 document.addEventListener("change", (e)=>{
-    if(e.target.matches("input[id='nom']")){
+    if(e.target.matches("input[id='name']")){
         recipeInfo.name = e.target.value;
         
-    }else if(e.target.matches("input[id='prix']")){
+    }else if(e.target.matches("input[id='price']")){
         recipeInfo.price = e.target.value;
  
     }else if(e.target.matches("select[id='cat']")){
@@ -81,13 +92,13 @@ function addRecipe(){
     let recette = `
         <div id="recipe" class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
             <div class="flex justify-between">
-                <span class="">${recipeInfo.name}</span>
-                <span >${recipeInfo.price} DH</span>
+                <span class="name">${recipeInfo.name}</span>
+                <span class="price">${recipeInfo.price} DH</span>
             </div>
             <div>
-                <span class="px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-lime-200 text-lime-900">${recipeInfo.cat}</span>
+                <span class="cat px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-lime-200 text-lime-900">${recipeInfo.cat}</span>
                 <!-- badge -->
-                <span class="px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">${recipeInfo.badge}</span>
+                <span class="badge px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">${recipeInfo.badge}</span>
             </div>
             <select id="day" class="border-2 border-gray-500 rounded p-0.5 w-full bg-black">
                 <option value="">En réserve</option>
@@ -98,16 +109,24 @@ function addRecipe(){
                 <option value="">Vendredi</option>
             </select>
             <div class="pt-2">
-                <button id="modify" data-id='${recipeId}' class="border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
+                <button data-id='${recipeId}' class="modify border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
                     Modifier</button>
-                <button  id="delete" data-id='${recipeId}' class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
+                <button id="delete" data-id='${recipeId}' class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
                     Supprimer</button>
             </div>
         </div>
     `;
     div.innerHTML = recette
     gardeManger.append(div);
-    recipeId++;
+    recipeInfo.id = recipeId;
+    recipes.push(recipeInfo);
+    localStorage.setItem("recipes", JSON.stringify(recipes))
+
+    // console.log("RI: ",recipeInfo)
+    console.log("RS: ",recipes)
+    ++recipeId;
+    localStorage.setItem("rId", recipeId)
+    recipeInfo = {badge, cat, id: recipeId};
 }
 
 createBtn.onclick = (e)=>{
@@ -117,7 +136,7 @@ createBtn.onclick = (e)=>{
         validationError.textContent = "Veuillez remplir correctement tous les champs.";
         return
     }
-    console.log(recipeInfo);
+    // console.log(recipeInfo);
     addRecipe();
     addingForm.style.display = "none"
 }
@@ -129,6 +148,63 @@ document.addEventListener("click", function(e){
         e.target.closest("#recipe").remove()
     }
 });
+
+// ================================================== Modify a recipe
+
+document.addEventListener("click", function(e){
+    if(e.target.matches("#garde-manger .modify")){
+        // console.log("Clicked")
+        modifingForm.style.display = "flex"
+        let id = e.target.dataset.id;
+        let recipe = recipes.find(r => r.id == id);
+        console.log("ID: ",id)
+            console.log("R: ",recipe)
+            let name = modifingForm.querySelector("#name");
+        let price = modifingForm.querySelector("#price");
+
+        name.value = recipe.name;
+        price.value = recipe.price;
+
+    }
+    if(e.target.matches(".popup-modify-form") || e.target.matches(".closeMark span")){
+        modifingForm.style.display = "none"
+    }
+    if(e.target.matches(".annule")){
+        e.preventDefault()
+        modifingForm.style.display = "none"
+    }
+});
+
+// document.addEventListener("click", function(e){
+    
+//     if(e.target.matches("#recipe .modify")){
+//         addingForm.style.display = "flex";
+//         let id = e.target.dataset.id;
+//         let recipe = recipes.find(r => r.id == id);
+//         console.log("ID: ",id)
+
+//         console.log("RS2",recipes)
+
+//         let name = addingForm.querySelector("#name");
+//         let price = addingForm.querySelector("#price");
+//         let badge = addingForm.querySelector("#badge");
+//         let cat = addingForm.querySelector("#cat");
+//         let create = addingForm.querySelector("#create-btn");
+//         create.textContent = "Modifer"
+//         create.id = "modify-btn"
+//         console.log("Name: ",name.value)
+        
+//         name.value = recipe.name;
+//         price.value = recipe.price;
+//         cat.value = recipe.cat;
+//         badge.value = recipe.badge;
+
+//         // console.log(recipe)
+//         // console.log(name, price)
+
+//     }
+    
+// });
 
 
 

@@ -168,7 +168,7 @@
         Les recette disponibles</p>
 
     <section id="garde-manger" class="flex justify-center flex-wrap gap-1.5 w-[90%] mx-auto text-gray-400">
-        <div class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
+        <div  id="recipe" class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
             <div class="flex justify-between">
                 <span class="">Velouté de légumes</span>
                 <span >5 DH</span>
@@ -187,21 +187,21 @@
                 <option value="">Vendredi</option>
             </select>
             <div class="pt-2">
-                <button class="border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
+                <button  id="modify" class="border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
                     Modifier</button>
-                <button class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
+                <button  id="delete" class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
                     Supprimer</button>
             </div>
         </div>
-        <div class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
+        <div  id="recipe" class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
             <div class="flex justify-between">
-                <span>Velouté de légumes</span>
+                <span >Velouté de légumes</span>
                 <span >5 DH</span>
             </div>
             <div>
-                <span class="px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-lime-200 text-lime-900">Plat principal</span>
+                <span class="cat px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-lime-200 text-lime-900">Plat principal</span>
                 <!-- badge -->
-                <span class="px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">Bio</span>
+                <span class="badge px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">Bio</span>
             </div>
             <select id="" class="border-2 border-gray-500 rounded p-0.5 w-full bg-black">
                 <option value="">En réserve</option>
@@ -211,10 +211,10 @@
                 <option value="">Jeudi</option>
                 <option value="">Vendredi</option>
             </select>
-            <div class="pt-2">
-                <button class="border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
+            <div class="pt-2" data-id="">
+                <button  id="modify" class="border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
                     Modifier</button>
-                <button class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
+                <button  id="delete" class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
                     Supprimer</button>
             </div>
         </div>
@@ -223,7 +223,7 @@
 
     <!-- -============================== -->
       <!-- ================================= Add a recette -->
-    <div class="popupForm fixed w-full h-full bg-[#00000096] top-0 z-10
+    <div class="popup-form fixed w-full h-full bg-[#00000096] top-0 z-10
      flex justify-center items-center">
 
         <div class="text-white bg-black p-3 rounded w-fit h-fit relative z-10 shadow-custom">
@@ -235,8 +235,8 @@
 
             <form class="flex flex-col gap-3.5">
                 <div class="relative">
-                    <label for="nom">Nom du plat</label><br>
-                    <input type="text" required id="nom" class="border-2 border-gray-500 rounded p-0.5">
+                    <label for="name">Nom du plat</label><br>
+                    <input type="text" required id="name" class="border-2 border-gray-500 rounded p-0.5">
                     <span id="name-error" class="block text-[11px] text-red-700 font-bold absolute"></span>
                 </div>
                 <div>
@@ -256,13 +256,63 @@
                     </select><br>
                 </div>
                 <div>
-                    <label for="prix">Prix</label><br>
-                    <input type="text" required id="prix" class="border-2 border-gray-500 rounded p-0.5">
+                    <label for="price" >Prix</label><br>
+                    <input type="text" required id="price" class="border-2 border-gray-500 rounded p-0.5">
                     <span id="price-error" class="block text-[11px] text-red-700 font-bold absolute"></span>
                 </div>
                 
                 <div class="pt-2 relative">
                     <button id="create-btn" class="bg-blue-800 px-1.5 text-white rounded cursor-pointer hover:opacity-80">Creer</button>
+                    <div class="annule border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700 inline">Annule</div>
+                    
+                    <span id="val-error" class="block text-[11px] text-red-700 font-bold absolute"></span>
+                </div>
+            </form>
+            
+            </div>
+    </div>
+
+      <!-- ================================= Modify a recette -->
+    <div class="popup-modify-form fixed w-full h-full bg-[#00000096] top-0 z-10
+     flex justify-center items-center">
+
+        <div class="text-white bg-black p-3 rounded w-fit h-fit relative z-10 shadow-custom">
+            <div class="closeMark text-red-700 font-bold text-xl absolute right-5 top-0 cursor-pointer hover:opacity-80">
+                <span class="transform rotate-45 block w-fit absolute left-0.5 ml-0.5">|</span>
+                <span class="transform -rotate-45 block w-fit absolute">|</span>
+            </div>
+            <p class="p-1.5 pb-4 font-bold text-xl text-center">Modifier une Recette</p>
+
+            <form class="flex flex-col gap-3.5">
+                <div class="relative">
+                    <label for="name">Nom du plat</label><br>
+                    <input type="text" required id="name" class="border-2 border-gray-500 rounded p-0.5">
+                    <span id="name-error" class="block text-[11px] text-red-700 font-bold absolute"></span>
+                </div>
+                <div>
+                    <label for="cat">Catégorie</label><br>
+                    <select required name="cat" id="cat" class="border-2 border-gray-500 rounded p-0.5 bg-black">
+                        <option value="Entrée">Entrée</option>
+                        <option value="Plat principal">Plat principal</option>
+                        <option value="Dessert">Dessert</option>
+                    </select><br>
+                </div>
+                <div>
+                    <label for="badge">Badge</label><br>
+                    <select required name="badge" id="badge" class="border-2 border-gray-500 rounded p-0.5 bg-black">
+                        <option value="Bio">Bio</option>
+                        <option value="Végétarien">Végétarien</option>
+                        <option value="Classique">Classique</option>
+                    </select><br>
+                </div>
+                <div>
+                    <label for="price" >Prix</label><br>
+                    <input type="text" required id="price" class="border-2 border-gray-500 rounded p-0.5">
+                    <span id="price-error" class="block text-[11px] text-red-700 font-bold absolute"></span>
+                </div>
+                
+                <div class="pt-2 relative">
+                    <button id="modify-btn" class="bg-blue-800 px-1.5 text-white rounded cursor-pointer hover:opacity-80">Modify</button>
                     <div class="annule border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700 inline">Annule</div>
                     
                     <span id="val-error" class="block text-[11px] text-red-700 font-bold absolute"></span>
