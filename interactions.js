@@ -57,10 +57,45 @@ document.addEventListener("input", (e)=>{
     }
 })
 // ================================================== Show recipes
+let localStorageData = JSON.parse(localStorage.getItem("recipes"));
+
+if(localStorageData.length > 0){
+    for(let r of localStorageData){
+        let div = document.createElement("div");
+        let recette = `
+        <div id="recipe" class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
+            <div class="flex justify-between">
+                <span class="name">${r.name}</span>
+                <span class="price">${r.price} DH</span>
+            </div>
+            <div>
+                <span class="cat px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-lime-200 text-lime-900">${r.cat}</span>
+                <!-- badge -->
+                <span class="badge px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">${r.badge}</span>
+            </div>
+            <select id="day" class="border-2 border-gray-500 rounded p-0.5 w-full bg-black">
+                <option value="">En réserve</option>
+                <option value="">Lundi</option>
+                <option value="">Mardi</option>
+                <option value="">Mercredi</option>
+                <option value="">Jeudi</option>
+                <option value="">Vendredi</option>
+            </select>
+            <div class="pt-2">
+                <button data-id='${r.id}' class="modify border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
+                    Modifier</button>
+                <button id="delete" data-id='${r.id}' class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
+                    Supprimer</button>
+            </div>
+        </div>
+    `;
+    div.innerHTML = recette
+    gardeManger.append(div);
+    }
+}
 
 // ================================================== Add a recipe
 
-let localStorageData = JSON.parse(localStorage.getItem("recipes"));
 console.log(localStorageData)
 
 let recipeId = Number(localStorage.getItem("rId")) || 1;
