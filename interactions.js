@@ -11,12 +11,14 @@ document.addEventListener("click", function(e){
         // console.log("Clicked")
         addingForm.style.display = "flex"
     }
-    if(e.target.matches(".popup-form") || e.target.matches(".closeMark span")){
-        addingForm.style.display = "none"
+    if(e.target.matches(".popup-form") || e.target.matches(".closeMark span") || e.target.matches(".popup-modify-form")){
+        addingForm.style.display = "none";
+        modifingForm.style.display = "none";
     }
     if(e.target.matches(".annule")){
-        e.preventDefault()
-        addingForm.style.display = "none"
+        e.preventDefault();
+        addingForm.style.display = "none";
+        modifingForm.style.display = "none";
     }
 });
 
@@ -59,7 +61,7 @@ document.addEventListener("input", (e)=>{
 // ================================================== Show recipes
 let localStorageData = JSON.parse(localStorage.getItem("recipes"));
 
-if(localStorageData.length > 0){
+if(localStorageData){
     for(let r of localStorageData){
         let div = document.createElement("div");
         let recette = `
@@ -102,7 +104,7 @@ let recipeId = Number(localStorage.getItem("rId")) || 1;
 
 let recipes = [];
 if(localStorageData){
-    recipes = [...localStorageData];
+    recipes = [...localStorageData].sort();
 
 }
 // console.log(recipes)
@@ -146,7 +148,7 @@ function addRecipe(){
             <div class="pt-2">
                 <button data-id='${recipeId}' class="modify border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
                     Modifier</button>
-                <button id="delete" data-id='${recipeId}' class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
+                <button id="delete"  data-id='${recipeId}' class="delete border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
                     Supprimer</button>
             </div>
         </div>
@@ -180,34 +182,44 @@ createBtn.onclick = (e)=>{
 
 document.addEventListener("click", function(e){
     if(e.target.matches("#delete")){
+        let id = e.target.dataset.id;
+        let update = recipes.filter(r => r.id != id)
+        localStorage.setItem("recipes", JSON.stringify(update))
+
         e.target.closest("#recipe").remove()
     }
 });
 
 // ================================================== Modify a recipe
 
+let id = null;
 document.addEventListener("click", function(e){
+        e.preventDefault();
+
     if(e.target.matches("#garde-manger .modify")){
         // console.log("Clicked")
         modifingForm.style.display = "flex"
-        let id = e.target.dataset.id;
+        id = e.target.dataset.id;
         let recipe = recipes.find(r => r.id == id);
         console.log("ID: ",id)
             console.log("R: ",recipe)
-            let name = modifingForm.querySelector("#name");
+        let name = modifingForm.querySelector("#name");
         let price = modifingForm.querySelector("#price");
 
         name.value = recipe.name;
-        price.value = recipe.price;
+        price.value = recipe.price;  
+    }
+    if(e.target.matches(".popup-modify-form #modify-btn")){
+        let update = recipes.filter(r => r.id != id);
+        console.log("update: ", update, id)
+        recipes = [...update, {...recipeInfo, id}];
+        localStorage.setItem("recipes", JSON.stringify(recipes.sort()));
+        window.navigation.reload()
+    }
 
-    }
-    if(e.target.matches(".popup-modify-form") || e.target.matches(".closeMark span")){
-        modifingForm.style.display = "none"
-    }
-    if(e.target.matches(".annule")){
-        e.preventDefault()
-        modifingForm.style.display = "none"
-    }
+    
+    // ----------------------------
+
 });
 
 // document.addEventListener("click", function(e){
