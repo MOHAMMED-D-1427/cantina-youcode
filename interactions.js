@@ -24,6 +24,7 @@ document.addEventListener("click", function(e){
 
 // ================================================== Regular Expressions
 const gardeManger = document.getElementById("garde-manger");
+const daysCards = document.getElementById("days-cards");
 const nameField = document.getElementById("name-error");
 const priceField = document.getElementById("price-error");
 const validationError = document.getElementById("val-error");
@@ -59,52 +60,128 @@ document.addEventListener("input", (e)=>{
     }
 })
 // ================================================== Show recipes
-let localStorageData = JSON.parse(localStorage.getItem("recipes"));
+let recipesData = JSON.parse(localStorage.getItem("recipes"));
 
-if(localStorageData){
-    for(let r of localStorageData){
-        let div = document.createElement("div");
-        let recette = `
-        <div id="recipe" class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
-            <div class="flex justify-between">
-                <span class="name">${r.name}</span>
-                <span class="price">${r.price} DH</span>
+function showRecipes(){
+    if(recipesData){
+        for(let r of recipesData){
+            let div = document.createElement("div");
+            div.classList.add("recipe")
+            let recette = `
+            <div data-id='${r.id}'  class=" ${r.opacity} bg-black w-65 p-1.5 pt-5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between relative">
+                <span  class="text-red-700 bg-red-300 p-0.5 text-xs 
+                    absolute top-0 left-0 ${r.opacity == " " ? "invisible":""}">[Assigné : ${r.reservedFor} - ${r.cat}]</span>
+                <div class="flex justify-between">
+                    <span class="name">${r.name}</span>
+                    <span class="price">${r.price} DH</span>
+                </div>
+                <div>
+                    <span class="cat px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-lime-200 text-lime-900">${r.cat}</span>
+                    <!-- badge -->
+                    <span class="badge px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">${r.badge}</span>
+                </div>
+                <select data-cat='${r.cat}' name="days-options" class="day-to-reserve border-2 border-gray-500 rounded p-0.5 w-full bg-black">
+                    <option value="null">En réserve</option>
+                    <option value="Lundi">Lundi</option>
+                    <option value="Mardi">Mardi</option>
+                    <option value="Mercredi">Mercredi</option>
+                    <option value="Jeudi">Jeudi</option>
+                    <option value="Vendredi">Vendredi</option>
+                </select>
+                <div class="pt-2">
+                    <button data-id='${r.id}' class="modify border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
+                        Modifier</button>
+                    <button id="delete" data-id='${r.id}' class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
+                        Supprimer</button>
+                </div>
             </div>
-            <div>
-                <span class="cat px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-lime-200 text-lime-900">${r.cat}</span>
-                <!-- badge -->
-                <span class="badge px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">${r.badge}</span>
-            </div>
-            <select id="day" class="border-2 border-gray-500 rounded p-0.5 w-full bg-black">
-                <option value="">En réserve</option>
-                <option value="">Lundi</option>
-                <option value="">Mardi</option>
-                <option value="">Mercredi</option>
-                <option value="">Jeudi</option>
-                <option value="">Vendredi</option>
-            </select>
-            <div class="pt-2">
-                <button data-id='${r.id}' class="modify border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
-                    Modifier</button>
-                <button id="delete" data-id='${r.id}' class=" border border-red-700 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-red-700">
-                    Supprimer</button>
-            </div>
-        </div>
-    `;
-    div.innerHTML = recette
-    gardeManger.append(div);
+        `;
+        div.innerHTML = recette
+        gardeManger.append(div);
+        }
     }
 }
+showRecipes()
 
-// ================================================== Add a recipe
+// ================================================== Show days
 
-console.log(localStorageData)
+let daysData = JSON.parse(localStorage.getItem("days"));
+
+let days = [{day: "Lundi", recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
+    {dessert: 'Libre', price: ''}], reserved: false}, 
+    {day: "Mardi", recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
+    {dessert: 'Libre', price: ''}], reserved: false}, 
+        {day: "Mercredi", recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
+    {dessert: 'Libre', price: ''}], reserved: false}, 
+        {day: "Jeudi", recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
+    {dessert: 'Libre', price: ''}], reserved: false}, 
+        {day: "Vendredi", recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
+    {dessert: 'Libre', price: ''}], reserved: false}];
+
+if(daysData){
+    days = daysData;
+}
+
+function showDays(){
+
+    for(let d of days){
+
+        let div = document.createElement("div");
+        div.classList.add("day-card")
+
+        let day = `
+        <div class="p-4 w-65 text-gray-400 opacity-80 h-fit
+        bg-black rounded border-2 border-gray-500">
+        <p class="font-bold ">${d.day}</p>
+            <!-- --- -->
+            <div>
+                <div class="flex items-end my-1.5">
+                    <span class="px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-lime-200 text-lime-900">
+                        Entrée</span> <p class="text-xs">${d.recipes[0].entree+" - "+d.recipes[0].price}</p>
+                </div>
+                <div class="flex items-end my-1.5">
+                    <span class="px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-orange-200 text-orange-900">
+                        Plat</span> <p class="text-xs">${d.recipes[1].plat+" - "+d.recipes[1].price}</p>
+                </div>
+                <div class="flex items-end my-1.5">
+                    <span class="px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-pink-200 text-pink-900">
+                        Dessert</span> <p class="text-xs">${d.recipes[2].dessert+" - "+d.recipes[2].price}</p>
+                </div>
+                <hr>
+                <p class="font-bold">Total Jour : <span class="text-green-600">${Number(d.recipes[0].price)+Number(d.recipes[1].price)+Number(d.recipes[2].price) || 0} DH</span>/50 DH</p>
+                </div>
+                </div>
+                `;
+                div.innerHTML = day
+                daysCards.append(div);
+            }
+
+}
+
+showDays()
+// ================================================== Remove all days cards
+function removeDaysCards(){
+    let days = document.querySelectorAll(".day-card ");
+    for(let d of days){
+        d.remove()
+    }
+}
+// ================================================== Remove all recipes
+function removeRecipes(){
+    let recipes = document.querySelectorAll(".recipe");
+    for(let r of recipes){
+        r.remove();
+    }
+}
+// ================================================== Add a recipe to the garde manger
+
+console.log(recipesData)
 
 let recipeId = Number(localStorage.getItem("rId")) || 1;
 
 let recipes = [];
-if(localStorageData){
-    recipes = [...localStorageData].sort();
+if(recipesData){
+    recipes = [...recipesData].sort();
 
 }
 // console.log(recipes)
@@ -126,8 +203,10 @@ document.addEventListener("change", (e)=>{
 
 function addRecipe(){
     let div = document.createElement("div");
+    div.classList.add("recipe")
     let recette = `
-        <div id="recipe" class="bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
+        <div id="recipe" class=" bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
+            
             <div class="flex justify-between">
                 <span class="name">${recipeInfo.name}</span>
                 <span class="price">${recipeInfo.price} DH</span>
@@ -137,13 +216,13 @@ function addRecipe(){
                 <!-- badge -->
                 <span class="badge px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">${recipeInfo.badge}</span>
             </div>
-            <select id="day" class="border-2 border-gray-500 rounded p-0.5 w-full bg-black">
-                <option value="">En réserve</option>
-                <option value="">Lundi</option>
-                <option value="">Mardi</option>
-                <option value="">Mercredi</option>
-                <option value="">Jeudi</option>
-                <option value="">Vendredi</option>
+            <select name="days-options" class="border-2 border-gray-500 rounded p-0.5 w-full bg-black">
+                <option value="null">En réserve</option>
+                <option value="Lundi">Lundi</option>
+                <option value="Mardi">Mardi</option>
+                <option value="Mercredi">Mercredi</option>
+                <option value="Jeudi">Jeudi</option>
+                <option value="Vendredi">Vendredi</option>
             </select>
             <div class="pt-2">
                 <button data-id='${recipeId}' class="modify border border-gray-500 px-1.5 rounded cursor-pointer hover:opacity-80 hover:text-blue-700">
@@ -186,7 +265,7 @@ document.addEventListener("click", function(e){
         let update = recipes.filter(r => r.id != id)
         localStorage.setItem("recipes", JSON.stringify(update))
 
-        e.target.closest("#recipe").remove()
+        e.target.closest(".recipe").remove()
     }
 });
 
@@ -194,27 +273,35 @@ document.addEventListener("click", function(e){
 
 let id = null;
 document.addEventListener("click", function(e){
-        e.preventDefault();
+    e.preventDefault();
 
     if(e.target.matches("#garde-manger .modify")){
         // console.log("Clicked")
-        modifingForm.style.display = "flex"
+        modifingForm.style.display = "flex";
         id = e.target.dataset.id;
         let recipe = recipes.find(r => r.id == id);
-        console.log("ID: ",id)
-            console.log("R: ",recipe)
+        console.log("ID: ",id);
+            console.log("R: ",recipe);
         let name = modifingForm.querySelector("#name");
         let price = modifingForm.querySelector("#price");
 
         name.value = recipe.name;
         price.value = recipe.price;  
+
+        recipeInfo.name = name.value;
+        recipeInfo.price = price.value ;
     }
     if(e.target.matches(".popup-modify-form #modify-btn")){
         let update = recipes.filter(r => r.id != id);
-        console.log("update: ", update, id)
+        console.log("update: ", update, id);
         recipes = [...update, {...recipeInfo, id}];
         localStorage.setItem("recipes", JSON.stringify(recipes.sort()));
-        window.navigation.reload()
+        recipesData = recipes;
+        // window.navigation.reload();
+        modifingForm.style.display = "none";
+        removeRecipes()
+        showRecipes()
+
     }
 
     
@@ -222,41 +309,112 @@ document.addEventListener("click", function(e){
 
 });
 
-// document.addEventListener("click", function(e){
-    
-//     if(e.target.matches("#recipe .modify")){
-//         addingForm.style.display = "flex";
-//         let id = e.target.dataset.id;
-//         let recipe = recipes.find(r => r.id == id);
-//         console.log("ID: ",id)
 
-//         console.log("RS2",recipes)
+// ================================================== Set a recipe to a day
 
-//         let name = addingForm.querySelector("#name");
-//         let price = addingForm.querySelector("#price");
-//         let badge = addingForm.querySelector("#badge");
-//         let cat = addingForm.querySelector("#cat");
-//         let create = addingForm.querySelector("#create-btn");
-//         create.textContent = "Modifer"
-//         create.id = "modify-btn"
-//         console.log("Name: ",name.value)
+document.addEventListener("click", function(e){
+    if(e.target.matches(".day-to-reserve")){
+        let day = e.target.value;
+        let id = e.target.closest("[data-id]").dataset.id;
+        let cat = e.target.dataset.cat
+        let isReserved = days.find(d => d.day == day)?.reserved;
+        let dayInfo = days.find(d => d.day == day);
         
-//         name.value = recipe.name;
-//         price.value = recipe.price;
-//         cat.value = recipe.cat;
-//         badge.value = recipe.badge;
-
-//         // console.log(recipe)
-//         // console.log(name, price)
-
-//     }
-    
-// });
 
 
+        // ====================== Check If recipe is reserved
+        console.log(dayInfo?.recipes[0].entree)
+        if(dayInfo?.recipes[0].entree != "Libre" && cat == "Entrée" && day != "null"){
+            console.log(isReserved, " - The Entrée is reserved");
+            return 
+        }
+        if(dayInfo?.recipes[1].plat != "Libre" && cat == "Plat principal" && day != "null"){
+            console.log(isReserved, " - The Plat is reserved");
+            return 
+        }
+        if(dayInfo?.recipes[2].dessert != "Libre" && cat == "Dessert" && day != "null"){
+            console.log(isReserved, " - The Dessert is reserved");
+            return 
+        }
+        // ====================== Check total price
+        if(day != "null"){
+            let incomingPrice = recipes.find(r => r.id == id).price
+
+            let totalPrice = Number(dayInfo.recipes[0].price)+Number(dayInfo.recipes[1].price)+Number(dayInfo.recipes[2].price)+Number(incomingPrice)
+            console.log("Total Price: ", totalPrice);
+            if(totalPrice > 50){
+                console.log("==> The price is more than 50 DH");
+                return 
+            }
+        }
+        // ======================
+        console.log(id);
+        let incDecOpacity = day != "null" ? "opacity-60" : " ";
+        
+        let find = {...recipes.find(r => r.id == id), reservedFor: day, opacity: incDecOpacity};
+        let filter = recipes.filter(r => r.id != id);
+        
+        if(day != "null"){
+            // e.target.closest("[data-id]").classList.add("opacity-60");
+        }else{
+            // find = {...recipes.find(r => r.id == id), reservedFor: 'null', opacity: incDecOpacity};
+            // e.target.closest("[data-id]").classList.remove("opacity-60");
+        }
+        let update = [...filter, find];
+        localStorage.setItem("recipes", JSON.stringify(update.sort()));
+        recipesData = update;
+        recipes = update;
+        removeRecipes()
+        showRecipes()
+
+        // -------------
+        // recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
+        // {dessert: 'Libre', price: ''}]
+        
+        if(days){
+            for(let recipe of recipes){
+                for(let x=0; x<days.length; x++){
+                    if(recipe.reservedFor == days[x].day){
+                        switch(recipe.cat){
+                            case "Dessert":
+                                days[x].recipes[2].dessert = recipe.name;
+                                days[x].recipes[2].price = recipe.price;
+                                days[x].reserved = true;
+                                // console.log(days);
+                                break;
+                            case "Plat principal":
+                                days[x].recipes[1].plat = recipe.name;
+                                days[x].recipes[1].price = recipe.price;
+                                days[x].reserved = true;
+                                // console.log(days);
+                                break;
+                            case "Entrée":
+                                days[x].recipes[0].entree = recipe.name;
+                                days[x].recipes[0].price = recipe.price;
+                                days[x].reserved = true;
+                                // console.log(days);
+                                break;
+                            default: 
+                                break;
+                        }
+                    }
+                }
+            }
+            localStorage.setItem("days", JSON.stringify(days))
+            removeDaysCards();
+            showDays();
+        }
+        
+
+        
 
 
+        console.log(recipes)
+        // localStorage.setItem("recipes", JSON.stringify(update))
 
+        // e.target.closest(".recipe").remove()
+    }
+});
 
 
 
