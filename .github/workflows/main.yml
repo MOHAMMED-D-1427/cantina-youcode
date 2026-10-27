@@ -31,7 +31,7 @@ jobs:
         run: npm ci
 
       - name: Build Tailwind CSS
-        run: npm run build:css
+        run: npm run build
 
       - name: Upload site files
         uses: actions/upload-pages-artifact@v3
