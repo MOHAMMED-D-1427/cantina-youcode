@@ -199,7 +199,10 @@ function emptyDay(day){
 document.addEventListener("click", (e)=>{
     if(e.target.matches(".empty-menu")){
         // console.log(e.target.dataset.day)
-        emptyDay(e.target.dataset.day)
+        emptyDay(e.target.dataset.day);
+        jours();
+        reserved();
+        cout();
     }
 })
 
@@ -366,12 +369,38 @@ document.addEventListener("click", function(e){
         showRecipes()
 
     }
-
-    
-    // ----------------------------
-
 });
 
+
+// ================================================== Statistics
+// let count = 0;
+function jours(){
+    let count = days.filter(d => d.recipes[0].price != "" && d.recipes[1].price != "" && d.recipes[2].price != "");
+    console.log("==> Count: ",count);
+    const jours = document.querySelector(".jours-prets");
+    jours.textContent = `${count.length || 0}/5`
+} 
+jours();
+
+function reserved(){
+    const reserved = document.querySelector(".plats-reserved");
+    let sum = recipes.filter((r)=>{
+        return r.reservedFor == "null"
+    });
+    reserved.textContent = sum.length || 0
+}
+reserved();
+cout();
+
+function cout(){
+    const cout = document.querySelector(".cout");
+    let sum = 0;
+    days.filter(d => d.recipes[0].price != "" || d.recipes[1].price != "" || d.recipes[2].price != "")
+    .map(d => sum += Number(d.recipes[0].price)+Number(d.recipes[1].price)+Number(d.recipes[2].price) );
+    cout.textContent = sum || 0
+    console.log("Cout",sum);
+}
+cout();
 
 // ================================================== Set a recipe to a day
 
@@ -496,11 +525,13 @@ document.addEventListener("click", function(e){
             localStorage.setItem("days", JSON.stringify(days))
             removeDaysCards();
             showDays();
+            jours();
+            reserved();
+            cout();
+            
+
+
         }
-        
-
-        
-
 
         console.log(recipes)
         // localStorage.setItem("recipes", JSON.stringify(update))
@@ -508,6 +539,8 @@ document.addEventListener("click", function(e){
         // e.target.closest(".recipe").remove()
     }
 });
+
+
 
 
 
