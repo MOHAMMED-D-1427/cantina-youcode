@@ -217,6 +217,9 @@
   .top-16\.75 {
     top: calc(var(--spacing) * 16.75);
   }
+  .right-0 {
+    right: 0px;
+  }
   .right-5 {
     right: calc(var(--spacing) * 5);
   }
@@ -378,6 +381,10 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-dashed {
+    --tw-border-style: dashed;
+    border-style: dashed;
+  }
   .border-gray-500 {
     border-color: var(--color-gray-500);
   }
@@ -419,6 +426,9 @@
   }
   .bg-red-300 {
     background-color: var(--color-red-300);
+  }
+  .mask-none {
+    mask-image: none;
   }
   .p-0 {
     padding: 0px;
@@ -580,6 +590,9 @@
     }
     .hover\:text-red-700:hover {
       color: var(--color-red-700);
+    }
+    .hover\:opacity-65:hover {
+      opacity: 65%;
     }
     .hover\:opacity-80:hover {
       opacity: 80%;

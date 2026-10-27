@@ -109,7 +109,7 @@ showRecipes()
 
 let daysData = JSON.parse(localStorage.getItem("days"));
 
-let days = [{day: "Lundi", recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
+let days = JSON.parse(localStorage.getItem("days")) || [{day: "Lundi", recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
     {dessert: 'Libre', price: ''}], reserved: false}, 
     {day: "Mardi", recipes: [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
     {dessert: 'Libre', price: ''}], reserved: false}, 
@@ -133,8 +133,11 @@ function showDays(){
 
         let day = `
         <div class="p-4 w-65 text-gray-400 opacity-80 h-fit
-        bg-black rounded border-2 border-gray-500">
-        <p class="font-bold ">${d.day}</p>
+        bg-black rounded border-2 border-gray-500 relative">
+            <span data-day="${d.day}" class="${!d.reserved ? "invisible" : ''} empty-menu
+            absolute top-0 right-0 text-sm p-1 text-red-700 underline cursor-pointer hover:opacity-65">Vider le menu</span>
+
+            <p class="font-bold ">${d.day}</p>
             <!-- --- -->
             <div>
                 <div class="flex items-end my-1.5">
@@ -175,6 +178,33 @@ function removeRecipes(){
         r.remove();
     }
 }
+
+// ================================================== Empty a day menu
+
+function emptyDay(day){
+    let emptyRecipes = [{entree: "Libre", price: ''}, {plat: "Libre", price: ''}, 
+    {dessert: 'Libre', price: ''}]
+    const updatedDays = daysData.map(d => {
+        if(d.day == day){
+            return {...d, recipes: emptyRecipes, reserved: false};
+        }
+        return d;
+    })
+    localStorage.setItem("days", JSON.stringify(updatedDays));
+    days = updatedDays;
+    removeDaysCards()
+    showDays()
+    console.log(updatedDays);
+}
+document.addEventListener("click", (e)=>{
+    if(e.target.matches(".empty-menu")){
+        // console.log(e.target.dataset.day)
+        emptyDay(e.target.dataset.day)
+    }
+})
+
+
+
 // ================================================== Add a recipe to the garde manger
 
 console.log(recipesData)
