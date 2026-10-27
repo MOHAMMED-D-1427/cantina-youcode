@@ -66,11 +66,13 @@ function showRecipes(){
     if(recipesData){
         for(let r of recipesData){
             let div = document.createElement("div");
+            // let assigne = r.reservedFor == null ? "" : `[Assigné : ${r.reservedFor} - ${r.cat}]`;
+            // console.log(!r.reservedFor)
             div.classList.add("recipe")
             let recette = `
             <div data-id='${r.id}'  class=" ${r.opacity} bg-black w-65 p-1.5 pt-5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between relative">
                 <span  class="text-red-700 bg-red-300 p-0.5 text-xs 
-                    absolute top-0 left-0 ${r.opacity == " " ? "invisible":""}">[Assigné : ${r.reservedFor} - ${r.cat}]</span>
+                    absolute top-0 left-0 ${r.reservedFor == "null" ? "invisible":""}"> ${`[Assigné : ${r.reservedFor} - ${r.cat}]`}</span>
                 <div class="flex justify-between">
                     <span class="name">${r.name}</span>
                     <span class="price">${r.price} DH</span>
@@ -185,7 +187,7 @@ if(recipesData){
 
 }
 // console.log(recipes)
-let recipeInfo = {badge, cat};
+let recipeInfo = {badge, cat, reservedFor: "null"};
 document.addEventListener("change", (e)=>{
     if(e.target.matches("input[id='name']")){
         recipeInfo.name = e.target.value;
@@ -201,12 +203,15 @@ document.addEventListener("change", (e)=>{
     }
 });
 
+
+
 function addRecipe(){
     let div = document.createElement("div");
     div.classList.add("recipe")
     let recette = `
-        <div id="recipe" class=" bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
-            
+        <div data-id='${recipeId}' class=" bg-black w-65 p-1.5 rounded border-2 border-gray-500 text-sm font-bold h-40 flex flex-col justify-between">
+            <span  class="text-red-700 bg-red-300 p-0.5 text-xs 
+                    absolute top-0 left-0 ${r.reservedFor == "null" ? "invisible":""}"> ${`[Assigné : ${r.reservedFor} - ${r.cat}]`}</span>
             <div class="flex justify-between">
                 <span class="name">${recipeInfo.name}</span>
                 <span class="price">${recipeInfo.price} DH</span>
@@ -216,7 +221,7 @@ function addRecipe(){
                 <!-- badge -->
                 <span class="badge px-2 py-0.5 mr-1.5 rounded-full text-xs font-medium bg-green-200 text-green-900">${recipeInfo.badge}</span>
             </div>
-            <select name="days-options" class="border-2 border-gray-500 rounded p-0.5 w-full bg-black">
+            <select name="days-options" data-cat="${recipeInfo.cat}" class="border-2 border-gray-500 rounded p-0.5 w-full bg-black">
                 <option value="null">En réserve</option>
                 <option value="Lundi">Lundi</option>
                 <option value="Mardi">Mardi</option>
@@ -243,11 +248,23 @@ function addRecipe(){
     ++recipeId;
     localStorage.setItem("rId", recipeId)
     recipeInfo = {badge, cat, id: recipeId};
+    // ====================
+    toast.textContent = "La recette a été ajoutée.!";
+    toast.classList.add("bg-[#007f00db]");
+    toast.classList.remove("opacity-0");
+    setTimeout(()=>{
+        toast.classList.add("opacity-0");
+        toast.classList.remove("bg-[#007f00db]");
+    }, 2500);
 }
 
+
 createBtn.onclick = (e)=>{
+    let nameIn = addingForm.querySelector("input[id='name']").value;
+    let priceIn = addingForm.querySelector("input[id='price']").value;
     e.preventDefault()
-    if(!isValid){
+    if(!isValid || nameIn.trim() == "" || priceIn.trim() == ""){
+        console.log(nameIn.trim(), priceIn.trim())
         e.target.parentElement.style.marginBottom = "27px"
         validationError.textContent = "Veuillez remplir correctement tous les champs.";
         return
@@ -264,6 +281,14 @@ document.addEventListener("click", function(e){
         let id = e.target.dataset.id;
         let update = recipes.filter(r => r.id != id)
         localStorage.setItem("recipes", JSON.stringify(update))
+
+        toast.textContent = "La recette est supprimée!!";
+        toast.classList.add("bg-[#ff0000bd]");
+        toast.classList.remove("opacity-0");
+        setTimeout(()=>{
+            toast.classList.add("opacity-0");
+            toast.classList.remove("bg-[#ff0000bd]");
+        }, 2500);
 
         e.target.closest(".recipe").remove()
     }
@@ -299,6 +324,14 @@ document.addEventListener("click", function(e){
         recipesData = recipes;
         // window.navigation.reload();
         modifingForm.style.display = "none";
+        toast.textContent = "La recette est modifiée!";
+        toast.classList.add("bg-[#007f00db]");
+        toast.classList.remove("opacity-0");
+        setTimeout(()=>{
+            toast.classList.add("opacity-0");
+            toast.classList.remove("bg-[#007f00db]");
+        }, 2500);
+
         removeRecipes()
         showRecipes()
 
@@ -320,22 +353,50 @@ document.addEventListener("click", function(e){
         let isReserved = days.find(d => d.day == day)?.reserved;
         let dayInfo = days.find(d => d.day == day);
         
-
-
+        let toast = document.querySelector("#toast");
         // ====================== Check If recipe is reserved
         console.log(dayInfo?.recipes[0].entree)
         if(dayInfo?.recipes[0].entree != "Libre" && cat == "Entrée" && day != "null"){
-            console.log(isReserved, " - The Entrée is reserved");
+            toast.textContent = "La recette est réservée!!";
+            toast.classList.add("bg-[#ff0000bd]");
+            toast.classList.remove("opacity-0");
+            setTimeout(()=>{
+                toast.classList.add("opacity-0");
+                toast.classList.remove("bg-[#ff0000bd]");
+            }, 2500);
+            console.log(isReserved, " - The recipe is reserved");
             return 
         }
         if(dayInfo?.recipes[1].plat != "Libre" && cat == "Plat principal" && day != "null"){
-            console.log(isReserved, " - The Plat is reserved");
+            toast.textContent = "La recette est réservée!!";
+            toast.classList.add("bg-[#ff0000bd]");
+            toast.classList.remove("opacity-0");
+            setTimeout(()=>{
+                toast.classList.add("opacity-0");
+                toast.classList.remove("bg-[#ff0000bd]");
+            }, 2500);
             return 
         }
         if(dayInfo?.recipes[2].dessert != "Libre" && cat == "Dessert" && day != "null"){
-            console.log(isReserved, " - The Dessert is reserved");
+            toast.textContent = "La recette est réservée!!";
+            toast.classList.add("bg-[#ff0000bd]");
+            toast.classList.remove("opacity-0");
+            setTimeout(()=>{
+                toast.classList.add("opacity-0");
+                toast.classList.remove("bg-[#ff0000bd]");
+            }, 2500);
             return 
         }
+        // ====================== Toast for a reserved recipe
+        // if(day != "null"){
+        //     toast.textContent = "La recette est réservée!";
+        //     toast.classList.add("bg-[#007f00db]");
+        //     toast.classList.remove("opacity-0");
+        //     setTimeout(()=>{
+        //         toast.classList.add("opacity-0");
+        //         toast.classList.remove("bg-[#007f00db]");
+        //     }, 2500);
+        // }
         // ====================== Check total price
         if(day != "null"){
             let incomingPrice = recipes.find(r => r.id == id).price
@@ -343,7 +404,14 @@ document.addEventListener("click", function(e){
             let totalPrice = Number(dayInfo.recipes[0].price)+Number(dayInfo.recipes[1].price)+Number(dayInfo.recipes[2].price)+Number(incomingPrice)
             console.log("Total Price: ", totalPrice);
             if(totalPrice > 50){
-                console.log("==> The price is more than 50 DH");
+                console.log("==> Le prix est supérieur à 50 DH");
+                toast.textContent = "Le prix est supérieur à 50 DH!!";
+                toast.classList.add("bg-[#ff0000bd]");
+                toast.classList.remove("opacity-0");
+                setTimeout(()=>{
+                    toast.classList.add("opacity-0");
+                    toast.classList.remove("bg-[#ff0000bd]");
+                }, 2500);
                 return 
             }
         }
@@ -354,12 +422,7 @@ document.addEventListener("click", function(e){
         let find = {...recipes.find(r => r.id == id), reservedFor: day, opacity: incDecOpacity};
         let filter = recipes.filter(r => r.id != id);
         
-        if(day != "null"){
-            // e.target.closest("[data-id]").classList.add("opacity-60");
-        }else{
-            // find = {...recipes.find(r => r.id == id), reservedFor: 'null', opacity: incDecOpacity};
-            // e.target.closest("[data-id]").classList.remove("opacity-60");
-        }
+        
         let update = [...filter, find];
         localStorage.setItem("recipes", JSON.stringify(update.sort()));
         recipesData = update;
